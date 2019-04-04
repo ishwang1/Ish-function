@@ -8,7 +8,7 @@
 
 library(Matrix)
 
-vcov_residual=function(e,bandwidth=NULL,stationary=TRUE) {
+vcov.residual=function(e,bandwidth=NULL,stationary=TRUE) {
   
   T_n=length(e)
   if(is.null(bandwidth)) {bandwidth=T_n-1}
