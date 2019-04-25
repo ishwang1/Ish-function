@@ -53,7 +53,7 @@ DGP.ARIMA=function(n,phi=NULL,theta=NULL,d=0,sigma=1,drop=0,seed=NULL) {
   }
   
   y=u[(drop+1):length(u)]
-  return(u)
+  return(y)
 }
 
 

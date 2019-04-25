@@ -6,9 +6,9 @@
 # If the error process is weakly stationary, for any i,j,s, cov(e[i],e[i+s])=cov(e[j],e[j+s]). 
 
 
-library(Matrix)
-
 vcov.residual=function(e,bandwidth=NULL,stationary=TRUE) {
+  
+  library(Matrix)
   
   T_n=length(e)
   if(is.null(bandwidth)) {bandwidth=T_n-1}
