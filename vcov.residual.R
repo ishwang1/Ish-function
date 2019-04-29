@@ -10,30 +10,31 @@ vcov.residual=function(e,bandwidth=NULL,stationary=TRUE) {
   
   library(Matrix)
   
-  T_n=length(e)
-  if(is.null(bandwidth)) {bandwidth=T_n-1}
+  n=length(e)
   
-  Omiga=Matrix(0,nrow=T_n,ncol=T_n,sparse=TRUE)
   if(stationary==TRUE) {
     
-    for(h in 0:bandwidth) {
-      gamma_h=sum(e[1:(T_n-h)]*e[(h+1):T_n])/(T_n-h)
-      Omiga=Omiga+
-        rbind(cbind(matrix(0,nrow=T_n-h,ncol=h),
-                    diag(gamma_h,T_n-h)),
-              matrix(0,nrow=h,ncol=T_n))
+    if(is.null(bandwidth)) {
+      bandwidth=n-1
+      Sigma=Diagonal(1,e[1]*e[n])
+    } else {
+      bandwidth=min(bandwidth,n-1)
+      Sigma=Diagonal(n-bandwidth,mean(e[1:(n-bandwidth)]*e[(bandwidth+1):n]))
     }
+    
+    for(h in (bandwidth-1):1) {
+      Sigma=rbind(cbind(0,Sigma),0)+Diagonal(n-h,mean(e[1:(n-h)]*e[(h+1):n]))
+    }
+    Sigma=rbind(cbind(0,Sigma),0)
+    Sigma=Sigma+t(Sigma)+Diagonal(n,mean(e^2))
     
   } else {
     
-    for(i in 1:T_n) {
-      for(j in i:min(i+bandwidth,T_n)) {Omiga[i,j]=e[i]*e[j]}
-    }
+    Sigma=e%*%t(e)
     
   }
-  Omiga=Omiga+t(Omiga-Diagonal(T_n,diag(Omiga)))
   
-  return(Omiga)
+  return(Sigma)
 }
 
 
